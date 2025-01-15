@@ -72,6 +72,7 @@ getgenv()["getsenv"] = newcclosure(function(script)
 		return Senv
 	end
 end)
+getgenv()["getsenv"] = getsenv
 local WebSocket = getgenv().WebSocket
 WebSocket.connect = getgenv().WebSocket.connect
 gethui = getgenv().gethui
