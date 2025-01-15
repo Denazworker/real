@@ -1,0 +1,41 @@
+getgenv().gethui = function()
+    local success, hui = pcall(function()
+        return game:GetService("CoreGui")["RobloxGui"]
+    end)
+    if success then
+        return hui
+    else
+        warn("Failed to get RobloxGui")
+        return nil
+    end
+end
+
+getgenv().WebSocket = {}
+getgenv().WebSocket.connect = function(url)
+	local onmsg = Instance.new("BindableEvent")
+	local oncls = Instance.new("BindableEvent")
+	local conn = true
+	return {
+		Send = function(self, message)
+			if conn then
+				onmsg:Fire("Received message: " .. message)
+			else
+				error("WebSocket is closed")
+			end
+		end,
+		Close = function(self)
+			if conn then
+				conn = false
+				oncls:Fire()
+			else
+				error("WebSocket is already closed")
+			end
+		end,
+		OnMessage = onmsg.Event,
+		OnClose = oncls.Event
+	}
+end
+
+local WebSocket = getgenv().WebSocket
+WebSocket.connect = getgenv().WebSocket.connect
+gethui = getgenv().gethui
